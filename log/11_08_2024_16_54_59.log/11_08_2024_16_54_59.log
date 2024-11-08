@@ -1,0 +1,4 @@
+[ 2024-11-08 16:54:59,057 ] 27 root - INFO - Reading from the file path 
+[ 2024-11-08 16:54:59,235 ] 31 root - INFO - Dataframe converted into json 
+[ 2024-11-08 16:54:59,427 ] 44 root - INFO - Inserting data into mongodb 
+[ 2024-11-08 16:55:09,199 ] 46 root - INFO - Data inserted 
