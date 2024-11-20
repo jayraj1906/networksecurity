@@ -6,8 +6,8 @@ from networksecurity.entity.config_entity import ModelTrainerConfig
 from networksecurity.entity.artifact_entity import DataTransformationArtifact,ModelTrainerArtifact
 import pandas as pd
 import numpy as np
-from networksecurity.utils.main_utils.utils import load_numpy_array_data,evaluate_models
-# from networksecurity.utils.ml_utils.
+from networksecurity.utils.main_utils.utils import load_numpy_array_data,evaluate_models,load_object,save_object
+from networksecurity.utils.ml_utils.model.estimator import NetworkModel
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import r2_score
 from sklearn.neighbors import KNeighborsClassifier
@@ -20,7 +20,9 @@ from sklearn.ensemble import (
 from networksecurity.utils.ml_utils.metric.classification_metric import get_classification_score
 import os
 from dotenv import load_dotenv
-
+import mlflow
+from networksecurity.constant.training_pipeline import MODEL_FILE_NAME
+from urllib.parse import urlparse
 load_dotenv()
 """
 try:
@@ -28,6 +30,9 @@ try:
 except Exception as e:
     raise NetworkSecurityException(e,sys)
 """
+os.environ["MLFLOW_TRACKING_URI"]=os.getenv("MLFLOW_TRACKING_URI")
+os.environ["MLFLOW_TRACKING_USERNAME"]=os.getenv("MLFLOW_TRACKING_USERNAME")
+os.environ["MLFLOW_TRACKING_PASSWORD"]=os.getenv("MLFLOW_TRACKING_PASSWORD")
 
 class ModelTrainer:
     def __init__(self,model_trainer_config:ModelTrainerConfig,data_transformation_artifact:DataTransformationArtifact):
@@ -39,7 +44,23 @@ class ModelTrainer:
         
     def track_mlflow(self,best_model,classificationmetric):
         try:
-            pass
+            MLFLOW_URI=os.getenv("MLFLOW_TRACKING_URI")
+
+            mlflow.set_registry_uri(MLFLOW_URI)
+            tracking_url_type_store=urlparse(mlflow.get_tracking_uri()).scheme
+            with mlflow.start_run():
+                f1_score=classificationmetric.f1_score
+                precision_score=classificationmetric.precision_score
+                recall_score=classificationmetric.recall_score
+
+                mlflow.log_metric("f1_score",f1_score)
+                mlflow.log_metric("precision",precision_score)
+                mlflow.log_metric("recall_score",recall_score)
+                mlflow.sklearn.log_model(best_model,"model")
+                if tracking_url_type_store != "file":
+                    mlflow.sklearn.log_model(best_model,"model",registered_model_name="best_model")
+                else:
+                    mlflow.sklearn.log_model(best_model,"model")
         except Exception as e:
             raise NetworkSecurityException(e,sys)
     
@@ -88,7 +109,20 @@ class ModelTrainer:
             y_train_pred=best_model.predict(x_train)
 
             classification_train_metric=get_classification_score(y_train,y_train_pred)
+            self.track_mlflow(best_model,classification_train_metric)
 
+            y_test_pred=best_model.predict(x_test)
+            classification_test_metric=get_classification_score(y_test,y_test_pred)
+            self.track_mlflow(best_model,classification_test_metric)
+
+            preprocessor=load_object(file_path=self.data_transformation_artifact.transformed_object_file_path)
+            model_dir_path=os.path.dirname(self.model_trainer_config.trained_model_file_path)
+            os.makedirs(model_dir_path,exist_ok=True)
+            network_model=NetworkModel(preprocessor=preprocessor,model=best_model)
+            save_object(file_path=self.model_trainer_config.trained_model_file_path,obj=NetworkModel)
+            save_object(file_path=os.path.join("final_model",MODEL_FILE_NAME),obj=best_model)
+            model_trainer_artifact=ModelTrainerArtifact(trained_model_file_path=self.model_trainer_config.trained_model_file_path,train_metric_artifact=classification_train_metric,test_metric_artifact=classification_test_metric)
+            return model_trainer_artifact
         except Exception as e:
             raise NetworkSecurityException(e,sys)
 
@@ -102,6 +136,7 @@ class ModelTrainer:
             y_train=test_arr[:,-1]
             x_test=train_arr[:,:-1]
             y_test=train_arr[:,-1]
-
+            model_trainer_artifact=self.train_model(x_test=x_test,x_train=x_train,y_test=y_test,y_train=y_train)
+            return model_trainer_artifact
         except Exception as e:
             raise NetworkSecurityException(e,sys)
