@@ -1,0 +1,13 @@
+[ 2024-11-20 16:55:58,858 ] 15 root INFO Data ingestion started 
+[ 2024-11-20 16:56:05,668 ] 56 root INFO Starting train test split 
+[ 2024-11-20 16:56:05,680 ] 58 root INFO Train test split done 
+[ 2024-11-20 16:56:05,680 ] 59 root INFO Exporting train and test set into train file path and test file path  
+[ 2024-11-20 16:56:05,757 ] 62 root INFO Exported train set and test set to their repective paths 
+[ 2024-11-20 16:56:05,759 ] 21 root INFO Data ingestion completed 
+[ 2024-11-20 16:56:05,759 ] 24 root INFO Data validatoin started 
+[ 2024-11-20 16:56:05,850 ] 30 root INFO Required number of columns: 31  
+[ 2024-11-20 16:56:05,851 ] 31 root INFO Data frame has 31 number of columns 
+[ 2024-11-20 16:56:05,851 ] 30 root INFO Required number of columns: 31  
+[ 2024-11-20 16:56:05,851 ] 31 root INFO Data frame has 31 number of columns 
+[ 2024-11-20 16:56:06,053 ] 30 root INFO Data validatoin completed 
+[ 2024-11-20 16:56:06,055 ] 33 root INFO Data validatoin started 
