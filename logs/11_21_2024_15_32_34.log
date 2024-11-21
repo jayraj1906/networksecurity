@@ -1,0 +1,5 @@
+[ 2024-11-21 15:32:39,758 ] 114 fastapi ERROR Form data requires "python-multipart" to be installed. 
+You can install "python-multipart" with: 
+
+pip install python-multipart
+ 

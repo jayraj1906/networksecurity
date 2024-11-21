@@ -1,0 +1,17 @@
+[ 2024-11-21 16:44:55,755 ] 19 root INFO Data ingestion started 
+[ 2024-11-21 16:45:00,396 ] 56 root INFO Starting train test split 
+[ 2024-11-21 16:45:00,402 ] 58 root INFO Train test split done 
+[ 2024-11-21 16:45:00,402 ] 59 root INFO Exporting train and test set into train file path and test file path  
+[ 2024-11-21 16:45:00,480 ] 62 root INFO Exported train set and test set to their repective paths 
+[ 2024-11-21 16:45:00,481 ] 23 root INFO Data ingestion completed 
+[ 2024-11-21 16:45:00,481 ] 30 root INFO Data validation started 
+[ 2024-11-21 16:45:00,570 ] 30 root INFO Required number of columns: 31  
+[ 2024-11-21 16:45:00,572 ] 31 root INFO Data frame has 31 number of columns 
+[ 2024-11-21 16:45:00,572 ] 30 root INFO Required number of columns: 31  
+[ 2024-11-21 16:45:00,572 ] 31 root INFO Data frame has 31 number of columns 
+[ 2024-11-21 16:45:00,794 ] 34 root INFO Data validation completed 
+[ 2024-11-21 16:45:00,794 ] 41 root INFO Data transformation started 
+[ 2024-11-21 16:45:00,860 ] 38 root INFO Initialise KNNimputer with {'missing_values': nan, 'n_neighbors': 3, 'weights': 'uniform'} 
+[ 2024-11-21 16:45:00,890 ] 45 root INFO Data transformation completed 
+[ 2024-11-21 16:45:00,890 ] 52 root INFO Model Trainer started 
+[ 2024-11-21 16:47:53,853 ] 56 root INFO Model Trainer completed 
