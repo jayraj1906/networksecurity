@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 mongo_db_url=os.getenv("MONGO_DB_URI")
-print(mongo_db_url)
 
 import pymongo
 from networksecurity.pipeline.training_pipeline import TrainingPipeline
